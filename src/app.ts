@@ -5,6 +5,7 @@ dotenv.config({ path: __dirname + '/../.env' });
 
 import notFoundMiddlware from './middleware/not-found';
 import errorHandlerMiddleware from './middleware/error-handler';
+import authRouter from './routes/authRoutes';
 import { connectDB } from './db/connect';
 import 'express-async-errors';
 
@@ -14,10 +15,14 @@ const app = express();
 app.use(morgan('tiny'));
 app.use(express.json());
 
+// routes
 app.get('/', (req: Request, res: Response) => {
   res.status(200).send('Api');
 });
 
+app.use('/api/v1/auth', authRouter);
+
+// middleware
 app.use(notFoundMiddlware);
 app.use(errorHandlerMiddleware);
 
