@@ -2,9 +2,11 @@
   "name": "e-commerce-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p .",
+    "start": "npm run build -- -w"
   },
   "repository": {
     "type": "git",
@@ -18,7 +20,9 @@
   },
   "homepage": "https://github.com/conor47/E-commerce-api#readme",
   "dependencies": {
+    "@types/express": "^4.17.13",
     "@types/mongoose": "^5.11.97",
+    "@types/node": "^17.0.16",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -34,8 +38,12 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.1",
     "morgan": "^1.10.0",
+    "ts-node": "^10.5.0",
     "typescript": "^4.5.5",
     "validator": "^13.7.0",
     "xss-clean": "^0.1.1"
+  },
+  "devDependencies": {
+    "tslint": "^6.1.3"
   }
 }
