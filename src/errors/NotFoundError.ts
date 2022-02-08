@@ -1,13 +1,11 @@
-export {};
-const { StatusCodes } = require('http-status-codes');
-const CustomApiError = require('./CustomApiError');
-
+import CustomApiError from './CustomApiError';
+import { StatusCodes } from 'http-status-codes';
 class NotFoundError extends CustomApiError {
-  statusCode: number;
+  private statusCode: number = StatusCodes.NOT_FOUND;
+
   constructor(message: string) {
     super(message);
-    this.statusCode = StatusCodes.NOT_FOUND;
   }
 }
 
-module.exports = NotFoundError;
+export default NotFoundError;
