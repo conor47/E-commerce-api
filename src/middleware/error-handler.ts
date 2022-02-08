@@ -33,4 +33,4 @@ const errorHandlerMiddleware = (
   return res.status(customError.statusCode).json({ msg: customError.msg });
 };
 
-module.exports = errorHandlerMiddleware;
+export default errorHandlerMiddleware;

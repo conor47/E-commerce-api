@@ -1,11 +1,7 @@
 import { UnauthenticatedError } from '../errors';
 import { NextFunction, Request, Response } from 'express';
 
-export const authenticateUser = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const authenticateUser = (req: Request, res: Response, next: NextFunction) => {
   let token: string = '';
 
   const authHeader = req.headers.authorization;
@@ -24,3 +20,5 @@ export const authenticateUser = (
     throw new UnauthenticatedError('Unauthenticated');
   }
 };
+
+export default authenticateUser;
