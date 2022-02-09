@@ -1,13 +1,14 @@
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
+import { Response } from 'express';
 
-interface payload {
+interface User {
   name: string;
   role: string;
   userId: mongoose.Types.ObjectId;
 }
 
-const createJwt = ({ payload }: { payload: payload }): string => {
+const createJwt = ({ payload }: { payload: User }): string => {
   const token = jwt.sign(payload, process.env.JWT_SECRET!, {
     expiresIn: process.env.JWT_LIFETIME!,
   });
@@ -18,4 +19,22 @@ const isTokenValid = ({ token }: { token: string }) => {
   return jwt.verify(token, process.env.JWT_SECRET!);
 };
 
-export { createJwt, isTokenValid };
+const attachCookiesToResponse = ({
+  res,
+  user,
+}: {
+  res: Response;
+  user: User;
+}) => {
+  const token = createJwt({ payload: user });
+  const oneDay = 1000 * 60 * 60 * 24;
+
+  res.cookie('token', token, {
+    httpOnly: true,
+    expires: new Date(Date.now() + oneDay),
+    secure: process.env.NODE_ENV === 'production',
+    signed: true,
+  });
+};
+
+export { createJwt, isTokenValid, attachCookiesToResponse };

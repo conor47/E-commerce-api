@@ -3,6 +3,7 @@ import morgan from 'morgan';
 require('express-async-errors');
 import * as dotenv from 'dotenv';
 dotenv.config({ path: __dirname + '/../.env' });
+import cookieParser from 'cookie-parser';
 
 import notFoundMiddlware from './middleware/not-found';
 import errorHandlerMiddleware from './middleware/error-handler';
@@ -15,6 +16,7 @@ const app = express();
 // middleware
 app.use(morgan('tiny'));
 app.use(express.json());
+app.use(cookieParser(process.env.JWT_SECRET));
 
 // routes
 app.get('/', (req: Request, res: Response) => {

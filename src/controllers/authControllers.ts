@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import User from '../models/User';
-import { BadRequestError } from '../errors';
-import { createJwt } from '../utils';
+import { BadRequestError, UnauthenticatedError } from '../errors';
+import { attachCookiesToResponse } from '../utils';
 
 export const registerUser = async (req: Request, res: Response) => {
   const { email, name, password } = req.body;
@@ -18,13 +18,32 @@ export const registerUser = async (req: Request, res: Response) => {
 
   const user = await User.create({ name, email, password, role });
   const tokenUser = { name: user.name, userId: user._id, role: user.role };
-  const token = createJwt({ payload: tokenUser });
+  attachCookiesToResponse({ res, user: tokenUser });
 
-  res.status(StatusCodes.CREATED).json({ user: tokenUser, token });
+  res.status(StatusCodes.CREATED).json({ user: tokenUser });
 };
 
 export const loginUser = async (req: Request, res: Response) => {
-  res.send('Login');
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    throw new BadRequestError('Please provide email and password');
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new UnauthenticatedError('Invalid credentials');
+  }
+
+  const isPasswordCorrect = await user.comparePassword(password);
+  if (!isPasswordCorrect) {
+    throw new UnauthenticatedError('Invalid credentials');
+  }
+
+  const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  attachCookiesToResponse({ res, user: tokenUser });
+
+  res.status(StatusCodes.CREATED).json({ user: tokenUser });
 };
 
 export const logoutUser = async (req: Request, res: Response) => {

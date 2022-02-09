@@ -8,6 +8,7 @@ export interface User {
   email: string;
   password: string;
   role: string;
+  comparePassword: (candidate: string) => boolean;
 }
 
 const UserSchema = new Schema<User>({
