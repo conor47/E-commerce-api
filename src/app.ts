@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import morgan from 'morgan';
+require('express-async-errors');
 import * as dotenv from 'dotenv';
 dotenv.config({ path: __dirname + '/../.env' });
 

@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/conor47/E-commerce-api#readme",
   "dependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.17.13",
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.3",

@@ -1,23 +1,25 @@
 import { string } from 'joi';
 import validator from 'validator';
 import mongoose, { Schema, model } from 'mongoose';
+import bcrypt from 'bcryptjs';
 
-interface User {
+export interface User {
   name: string;
   email: string;
   password: string;
   role: string;
 }
 
-const UserSchema = new Schema({
+const UserSchema = new Schema<User>({
   name: {
-    type: string,
+    type: String,
     required: [true, 'Please provde name'],
     minLength: 3,
     maxLength: 50,
   },
   email: {
-    type: string,
+    type: String,
+    unique: true,
     required: [true, 'Please provde email'],
     validate: {
       validator: validator.isEmail,
@@ -25,16 +27,27 @@ const UserSchema = new Schema({
     },
   },
   password: {
-    type: string,
+    type: String,
     required: [true, 'Please provde password'],
     minLength: 6,
   },
   role: {
-    type: string,
+    type: String,
     enum: ['admin', 'user'],
     default: 'user',
   },
 });
+
+//pre save hook for hashing pashwords
+UserSchema.pre('save', async function () {
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+UserSchema.methods.comparePassword = async function (candidate: string) {
+  const isMatch = await bcrypt.compare(candidate, this.password);
+  return isMatch;
+};
 
 const UserModel = model<User>('User', UserSchema);
 export default UserModel;
