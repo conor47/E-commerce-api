@@ -1,11 +1,25 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Types } from 'mongoose';
 import { Response } from 'express';
 
-interface User {
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: User;
+  }
+}
+
+export interface User {
   name: string;
   role: string;
   userId: Types.ObjectId;
+}
+
+interface Payload {
+  name: string;
+  userId: Types.ObjectId;
+  role: string;
+  iat: number;
+  exp: number;
 }
 
 const createJwt = ({ payload }: { payload: User }): string => {
@@ -16,9 +30,9 @@ const createJwt = ({ payload }: { payload: User }): string => {
 };
 
 const isTokenValid = ({ token }: { token: string }) => {
-  return jwt.verify(token, process.env.JWT_SECRET!);
+  return jwt.verify(token, process.env.JWT_SECRET!) as User;
 };
-
+``;
 const attachCookiesToResponse = ({
   res,
   user,
