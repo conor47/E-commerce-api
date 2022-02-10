@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken';
-import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 import { Response } from 'express';
 
 interface User {
   name: string;
   role: string;
-  userId: mongoose.Types.ObjectId;
+  userId: Types.ObjectId;
 }
 
 const createJwt = ({ payload }: { payload: User }): string => {

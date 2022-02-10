@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import notFoundMiddlware from './middleware/not-found';
 import errorHandlerMiddleware from './middleware/error-handler';
 import authRouter from './routes/authRoutes';
+import userRouter from './routes/userRoutes';
 import { connectDB } from './db/connect';
 import 'express-async-errors';
 
@@ -24,6 +25,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/users', userRouter);
 
 // middleware
 app.use(notFoundMiddlware);
