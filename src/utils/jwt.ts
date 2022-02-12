@@ -8,14 +8,6 @@ export interface User {
   userId: Types.ObjectId;
 }
 
-interface Payload {
-  name: string;
-  userId: Types.ObjectId;
-  role: string;
-  iat: number;
-  exp: number;
-}
-
 const createJwt = ({ payload }: { payload: User }): string => {
   const token = jwt.sign(payload, process.env.JWT_SECRET!, {
     expiresIn: process.env.JWT_LIFETIME!,

@@ -6,7 +6,11 @@ import {
   UnauthenticatedError,
 } from '../errors';
 
-import { attachCookiesToResponse, createTokenUser } from '../utils';
+import {
+  attachCookiesToResponse,
+  checkPermissions,
+  createTokenUser,
+} from '../utils';
 import User from '../models/User';
 
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -25,29 +29,47 @@ export const getSingleUser = async (req: Request, res: Response) => {
   if (!user) {
     throw new NotFoundError(`No user with id : ${req.params.id}`);
   }
-
+  checkPermissions(req.user!, user._id);
   res.status(StatusCodes.OK).json({ user });
 };
 
 export const showCurrentUser = async (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({ user: req.user });
 };
+
+// update user with findOneAndUpdate
+
+// export const updateUser = async (req: Request, res: Response) => {
+//   const { email, name } = req.body;
+//   if (!email || !name) {
+//     throw new BadRequestError('Please provide both values');
+//   }
+//   const user = await User.findOneAndUpdate(
+//     { _id: req.user!.userId },
+//     { email, name },
+//     { new: true, runValidators: true }
+//   );
+
+//   const tokenUser = createTokenUser(user);
+//   attachCookiesToResponse({ res, user: tokenUser });
+//   res.status(StatusCodes.OK).json({ user: tokenUser });
+// };
+
 export const updateUser = async (req: Request, res: Response) => {
   const { email, name } = req.body;
   if (!email || !name) {
     throw new BadRequestError('Please provide both values');
   }
-  const user = await User.findOneAndUpdate(
-    { _id: req.user!.userId },
-    { email, name },
-    { new: true, runValidators: true }
-  );
+
+  const user = await User.findOne({ _id: req.user!.userId });
+  user!.email = email;
+  user!.name = name;
+  await user!.save();
 
   const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, user: tokenUser });
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
-
 export const updateUserPassword = async (req: Request, res: Response) => {
   const { oldPassword, newPassword } = req.body;
   if (!oldPassword || !newPassword) {
