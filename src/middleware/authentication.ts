@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { User } from '../utils/jwt';
-import { UnauthenticatedError } from '../errors';
+import { UnauthenticatedError, UnauthorizedError } from '../errors';
 import { isTokenValid } from '../utils';
 
 export const authenticateUser = (
@@ -21,4 +21,13 @@ export const authenticateUser = (
     }
     next();
   }
+};
+
+export const authorizePermissions = (...args: string[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!args.includes(req.user!.role)) {
+      throw new UnauthorizedError('Not authorized to access this route');
+    }
+    next();
+  };
 };

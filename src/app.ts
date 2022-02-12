@@ -11,8 +11,15 @@ import authRouter from './routes/authRoutes';
 import userRouter from './routes/userRoutes';
 import { connectDB } from './db/connect';
 import 'express-async-errors';
+import { User } from './utils/jwt';
 
 const app = express();
+
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: User;
+  }
+}
 
 // middleware
 app.use(morgan('tiny'));

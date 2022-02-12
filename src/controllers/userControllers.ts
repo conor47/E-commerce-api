@@ -25,7 +25,7 @@ export const getSingleUser = async (req: Request, res: Response) => {
 };
 
 export const showCurrentUser = async (req: Request, res: Response) => {
-  res.send('show current user route');
+  res.status(StatusCodes.OK).json({ user: req.user });
 };
 export const updateUser = async (req: Request, res: Response) => {
   res.send(req.body);
