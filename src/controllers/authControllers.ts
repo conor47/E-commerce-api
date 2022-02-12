@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import User from '../models/User';
 import { BadRequestError, UnauthenticatedError } from '../errors';
-import { attachCookiesToResponse } from '../utils';
+import { attachCookiesToResponse, createTokenUser } from '../utils';
 
 export const registerUser = async (req: Request, res: Response) => {
   const { email, name, password } = req.body;
@@ -17,7 +17,7 @@ export const registerUser = async (req: Request, res: Response) => {
   const role = isFirst ? 'admin' : 'user';
 
   const user = await User.create({ name, email, password, role });
-  const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, user: tokenUser });
 
   res.status(StatusCodes.CREATED).json({ user: tokenUser });
@@ -40,7 +40,7 @@ export const loginUser = async (req: Request, res: Response) => {
     throw new UnauthenticatedError('Invalid credentials');
   }
 
-  const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, user: tokenUser });
 
   res.status(StatusCodes.CREATED).json({ user: tokenUser });

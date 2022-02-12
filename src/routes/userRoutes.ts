@@ -20,8 +20,8 @@ router.get(
   getAllUsers
 );
 router.get('/showMe', authenticateUser, showCurrentUser);
-router.patch('/updateUser', updateUser);
-router.patch('/updateUserPassword', updateUserPassword);
+router.patch('/updateUser', authenticateUser, updateUser);
+router.patch('/updateUserPassword', authenticateUser, updateUserPassword);
 router.get('/:id', authenticateUser, getSingleUser);
 
 export default router;
