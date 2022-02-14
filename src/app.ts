@@ -4,6 +4,7 @@ require('express-async-errors');
 import * as dotenv from 'dotenv';
 dotenv.config({ path: __dirname + '/../.env' });
 import cookieParser from 'cookie-parser';
+import fileUpload from 'express-fileupload';
 
 import notFoundMiddlware from './middleware/not-found';
 import errorHandlerMiddleware from './middleware/error-handler';
@@ -26,6 +27,9 @@ declare module 'express-serve-static-core' {
 app.use(morgan('tiny'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
+app.use(express.static(__dirname + '/public'));
+
+app.use(fileUpload());
 
 // routes
 app.get('/', (req: Request, res: Response) => {
