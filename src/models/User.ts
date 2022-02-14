@@ -1,6 +1,5 @@
-import { string } from 'joi';
 import validator from 'validator';
-import mongoose, { Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 export interface User {
