@@ -5,6 +5,7 @@ import Product from '../models/Product';
 import { StatusCodes } from 'http-status-codes';
 import { checkPermissions } from '../utils';
 import { BadRequestError, NotFoundError } from '../errors';
+import path from 'path/posix';
 
 export const createReview = async (req: Request, res: Response) => {
   const { product: productId } = req.body;

@@ -1,5 +1,6 @@
-import mongoose, { Schema, model } from 'mongoose';
+import mongoose, { Schema, model, VirtualType } from 'mongoose';
 import { User } from './User';
+import { Review } from './Review';
 
 export interface Product {
   name: string;
@@ -15,6 +16,7 @@ export interface Product {
   averageRating: number;
   rating: number;
   user: User;
+  reviews: VirtualType;
 }
 
 const ProductSchema = new Schema<Product>(
@@ -82,6 +84,20 @@ const ProductSchema = new Schema<Product>(
   },
   { timestamps: true }
 );
+
+ProductSchema.set('toObject', { virtuals: true });
+ProductSchema.set('toJSON', { virtuals: true });
+
+ProductSchema.virtual('reviews', {
+  ref: 'Review',
+  localField: '_id',
+  foreignField: 'product',
+  justOne: false,
+});
+
+ProductSchema.pre('remove', async function (next) {
+  await this.model('Review').deleteMany({ product: this._id });
+});
 
 const productModel = model<Product>('Product', ProductSchema);
 
