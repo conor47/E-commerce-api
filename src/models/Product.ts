@@ -54,6 +54,7 @@ const ProductSchema = new Schema<Product>(
     },
     colors: {
       type: [String],
+      default: ['#222'],
       required: true,
     },
     featured: {
