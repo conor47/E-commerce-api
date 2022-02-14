@@ -1,5 +1,5 @@
 import validator from 'validator';
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 export interface User {
@@ -7,6 +7,7 @@ export interface User {
   email: string;
   password: string;
   role: string;
+  _id: mongoose.Types.ObjectId;
   comparePassword: (candidate: string) => boolean;
 }
 
