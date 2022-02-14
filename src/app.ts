@@ -9,6 +9,7 @@ import notFoundMiddlware from './middleware/not-found';
 import errorHandlerMiddleware from './middleware/error-handler';
 import authRouter from './routes/authRoutes';
 import userRouter from './routes/userRoutes';
+import productRouter from './routes/productRoutes';
 import { connectDB } from './db/connect';
 import 'express-async-errors';
 import { User } from './utils/jwt';
@@ -33,6 +34,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/products', productRouter);
 
 // middleware
 app.use(notFoundMiddlware);
