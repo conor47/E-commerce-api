@@ -8,14 +8,14 @@ export interface Order {
   shippingFee: number;
   subtotal: number;
   total: number;
-  cartItems: string[];
+  orderItems: string[];
   user: User;
   clientSecret: string;
   paymentIntentId: string;
   status: string;
 }
 
-export interface SingleCartItem {
+export interface SingleOrderItem {
   name: string;
   image: string;
   price: number;
@@ -23,7 +23,7 @@ export interface SingleCartItem {
   product: Product;
 }
 
-const SingleCartItemSchema = new Schema<SingleCartItem>({
+const SingleCartItemSchema = new Schema<SingleOrderItem>({
   name: { type: String, required: true },
   image: { type: String, required: true },
   price: { type: Number, required: true },
@@ -49,7 +49,7 @@ const OrderSchema = new Schema<Order>(
       type: Number,
       required: true,
     },
-    cartItems: [],
+    orderItems: [],
     user: {
       type: Types.ObjectId,
       ref: 'User',
